@@ -41,6 +41,12 @@ You can also pass arguments to `cargo check`:
 cargo ox explain --features my-feature
 ```
 
+You can also run it on a specific project directory:
+
+```bash
+cargo ox explain --project ../my-other-project
+```
+
 ### Refactor Code
 
 Run `cargo ox refactor` to get AI suggestions for improving a specific file.

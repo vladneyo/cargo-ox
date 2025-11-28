@@ -4,12 +4,17 @@ use tokio::process::Command;
 use crate::llm::ask_ollama;
 use crate::prompts::{SYSTEM_PROMPT, build_explain_prompt};
 
-pub async fn run_explain(cargo_args: Vec<String>) -> Result<()> {
+pub async fn run_explain(cargo_args: Vec<String>, project_path: Option<String>) -> Result<()> {
     // Build `cargo check` command
     let mut cmd = Command::new("cargo");
     cmd.arg("check");
     // Make output less noisy & consistent
     cmd.arg("--color").arg("never");
+    
+    if let Some(path) = project_path {
+        cmd.current_dir(path);
+    }
+
     // pass through any extra args
     cmd.args(&cargo_args);
 
