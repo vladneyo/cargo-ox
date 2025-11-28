@@ -10,3 +10,4 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 anyhow = "1"
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "process"] }
+indicatif = "0.17"

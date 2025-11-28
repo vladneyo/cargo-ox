@@ -1,5 +1,7 @@
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+use indicatif::{ProgressBar, ProgressStyle};
+use std::time::Duration;
 
 #[derive(Serialize)]
 struct ChatMessage {
@@ -49,6 +51,16 @@ pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String
         stream: false,
     };
 
+    let spinner = ProgressBar::new_spinner();
+    spinner.set_style(
+        ProgressStyle::default_spinner()
+            .tick_chars("⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏")
+            .template("{spinner:.green} {msg}")
+            .unwrap(),
+    );
+    spinner.set_message("Thinking...");
+    spinner.enable_steady_tick(Duration::from_millis(100));
+
     let resp = client
         .post("http://localhost:11434/api/chat")
         .json(&req)
@@ -57,6 +69,8 @@ pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String
         .error_for_status()?
         .json::<ChatResponse>()
         .await?;
+
+    spinner.finish_and_clear();
 
     Ok(resp.message.content)
 }
