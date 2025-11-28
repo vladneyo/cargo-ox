@@ -27,7 +27,7 @@ struct ChatResponseMessage {
 }
 
 pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String> {
-    let model = std::env::var("OX_MODEL").unwrap_or_else(|_| "llama3.1".to_string());
+    let model = std::env::var("OX_MODEL").unwrap_or_else(|_| "llama4:scout".to_string());
 
     let client = reqwest::Client::new();
     
