@@ -2,6 +2,7 @@ use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use indicatif::{ProgressBar, ProgressStyle};
 use std::time::Duration;
+use std::io::{self, Write};
 
 #[derive(Serialize)]
 struct ChatMessage {
@@ -48,7 +49,7 @@ pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String
                 content: user_prompt.into(),
             },
         ],
-        stream: false,
+        stream: true,
     };
 
     let spinner = ProgressBar::new_spinner();
@@ -61,18 +62,33 @@ pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String
     spinner.set_message("Thinking...");
     spinner.enable_steady_tick(Duration::from_millis(100));
 
-    let resp = client
+    let mut resp = client
         .post("http://localhost:11434/api/chat")
         .json(&req)
         .send()
         .await?
-        .error_for_status()?
-        .json::<ChatResponse>()
-        .await?;
+        .error_for_status()?;
 
+    let mut full_response = String::new();
+
+    // Stop spinner before streaming starts
     spinner.finish_and_clear();
 
-    Ok(resp.message.content)
+    while let Some(chunk) = resp.chunk().await? {
+        let s = String::from_utf8_lossy(&chunk);
+        
+        // Ollama sends multiple JSON objects in one chunk sometimes
+        for line in s.lines() {
+            if line.trim().is_empty() { continue; }
+            if let Ok(part) = serde_json::from_str::<ChatResponse>(line) {
+                print!("{}", part.message.content);
+                io::stdout().flush()?;
+                full_response.push_str(&part.message.content);
+            }
+        }
+    }
+
+    Ok(full_response)
 }
 
 #[derive(Deserialize)]
