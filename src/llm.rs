@@ -21,6 +21,7 @@ struct ChatResponse {
 
 #[derive(Deserialize)]
 struct ChatResponseMessage {
+    #[allow(dead_code)]
     role: String,
     content: String,
 }
