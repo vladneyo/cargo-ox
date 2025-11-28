@@ -1,7 +1,13 @@
 #!/bin/bash
 set -e
 
-MODEL_NAME="llama4:scout"
+# Extract model name from Rust configuration
+MODEL_NAME=$(grep 'const DEFAULT_MODEL' src/configuration.rs | cut -d '"' -f 2)
+
+if [ -z "$MODEL_NAME" ]; then
+    echo "Error: Could not extract DEFAULT_MODEL from src/configuration.rs"
+    exit 1
+fi
 
 echo "=== Cargo-Ex Setup: Ollama & Model ==="
 

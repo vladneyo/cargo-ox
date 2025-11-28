@@ -14,12 +14,13 @@ Here is the full error output (from stderr):
 {errors}
 ----------------------------------------------
 
+0. Think step by step, deeply.
 1. Explain in plain language what is going wrong.
 2. Group related errors together.
-3. For each group, suggest concrete code changes or patterns that would fix it.
+3. For each group, loookup for related files, dependencies, scopes and structure, and suggest concrete code changes or patterns that will fix it.
 4. If the errors are caused by a typical Rust pattern (lifetimes, traits, borrowing), point that out explicitly.
 
-Keep it compact but actionable.
+Make a summary, keep it compact but actionable, with bullet points.
 "#,
         errors = errors
     )

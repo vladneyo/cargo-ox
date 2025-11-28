@@ -5,6 +5,7 @@ mod llm;
 mod explain;
 mod refactor;
 mod prompts;
+mod configuration;
 
 
 

@@ -15,7 +15,7 @@ We provide a setup script to automatically install Ollama (if missing), start th
     ```bash
     ./setup_ollama.sh
     ```
-    This will prepare your environment and ensure the default model (`llama4:scout`) is available.
+    This will prepare your environment and ensure the default model (`gpt-oss:20b`) is available.
 
 ## Installation
 
@@ -51,7 +51,7 @@ cargo ox refactor --file src/main.rs
 
 ## Configuration
 
-By default, `cargo-ox` uses the `llama4:scout` model. You can override this by setting the `OX_MODEL` environment variable:
+By default, `cargo-ox` uses the `gpt-oss:20b` model. You can override this by setting the `OX_MODEL` environment variable:
 
 ```bash
 export OX_MODEL=llama3

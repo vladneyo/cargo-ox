@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use indicatif::{ProgressBar, ProgressStyle};
 use std::time::Duration;
 use std::io::{self, Write};
+use crate::configuration::DEFAULT_MODEL;
 
 #[derive(Serialize)]
 struct ChatMessage {
@@ -30,7 +31,7 @@ struct ChatResponseMessage {
 }
 
 pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String> {
-    let model = std::env::var("OX_MODEL").unwrap_or_else(|_| "llama4:scout".to_string());
+    let model = std::env::var("OX_MODEL").unwrap_or_else(|_| DEFAULT_MODEL.to_string());
 
     let client = reqwest::Client::new();
     
