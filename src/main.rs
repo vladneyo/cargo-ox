@@ -26,10 +26,6 @@ enum Commands {
         /// Path to the project directory
         #[arg(short, long)]
         project: Option<String>,
-
-        /// Optional: pass extra args to `cargo check` (e.g. --features xyz)
-        #[arg(trailing_var_arg = true)]
-        cargo_args: Vec<String>,
     },
 
     /// Suggest refactors for a Rust file
@@ -45,8 +41,8 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Explain { cargo_args, project } => {
-            explain::run_explain(cargo_args, project).await?;
+        Commands::Explain { project } => {
+            explain::run_explain(project).await?;
         }
         Commands::Refactor { file } => {
             refactor::run_refactor(file).await?;

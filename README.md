@@ -35,12 +35,6 @@ Run `cargo ox explain` to run `cargo check`, capture any errors, and get an AI e
 cargo ox explain
 ```
 
-You can also pass arguments to `cargo check`:
-
-```bash
-cargo ox explain --features my-feature
-```
-
 You can also run it on a specific project directory:
 
 ```bash
