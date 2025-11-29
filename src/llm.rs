@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use indicatif::{ProgressBar, ProgressStyle};
 use std::time::Duration;
 use std::io::{self, Write};
-use crate::configuration::DEFAULT_MODEL;
+use crate::configuration::{DEFAULT_MODEL, DEFAULT_OLLAMA_ENDPOINT};
 
 #[derive(Serialize)]
 struct ChatMessage {
@@ -32,11 +32,12 @@ struct ChatResponseMessage {
 
 pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String> {
     let model = std::env::var("OX_MODEL").unwrap_or_else(|_| DEFAULT_MODEL.to_string());
+    let endpoint = std::env::var("OX_OLLAMA_ENDPOINT").unwrap_or_else(|_| DEFAULT_OLLAMA_ENDPOINT.to_string());
 
     let client = reqwest::Client::new();
     
     // Pre-flight check
-    check_ollama(&client, &model).await?;
+    check_ollama(&client, &model, &endpoint).await?;
 
     let req = ChatRequest {
         model,
@@ -64,7 +65,7 @@ pub async fn ask_ollama(system_prompt: &str, user_prompt: &str) -> Result<String
     spinner.enable_steady_tick(Duration::from_millis(100));
 
     let mut resp = client
-        .post("http://localhost:11434/api/chat")
+        .post(format!("{}/api/chat", endpoint))
         .json(&req)
         .send()
         .await?
@@ -102,14 +103,14 @@ struct ModelInfo {
     name: String,
 }
 
-async fn check_ollama(client: &reqwest::Client, model: &str) -> Result<()> {
+async fn check_ollama(client: &reqwest::Client, model: &str, endpoint: &str) -> Result<()> {
     // 1. Check if Ollama is running
-    let resp = client.get("http://localhost:11434/api/tags").send().await;
+    let resp = client.get(format!("{}/api/tags", endpoint)).send().await;
 
     let resp = match resp {
         Ok(r) => r,
         Err(_) => {
-            anyhow::bail!("Could not connect to Ollama at http://localhost:11434. Is it running?");
+            anyhow::bail!("Could not connect to Ollama at {}. Is it running?", endpoint);
         }
     };
 
