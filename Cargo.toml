@@ -2,6 +2,23 @@
 name = "cargo-ox"
 version = "0.1.0"
 edition = "2024"
+authors = [
+    "Vladyslav Neichev"
+]
+description = "Cargo Oxide is a CLI tool for AI-powered Rust development."
+repository = "https://github.com/vladneyo/cargo-ox"
+license = "MIT"
+keywords = ["cli", "rust", "development", "ai"]
+categories = ["development-tools", "development-tools::debugging"]
+homepage = "https://github.com/vladneyo/cargo-ox"
+readme = "README.md"
+
+exclude = [
+    ".idea/*",
+    ".github/*",
+    "*.orig",
+    "**/tests/*"
+]
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
